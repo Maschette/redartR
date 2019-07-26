@@ -1,4 +1,5 @@
-requireNamespace("dartR")
+library(dartR)
+library(ggplot2)
 
 #' A ggplot builder for a bivariate plot of the results of a PCoA ordination
 #'
@@ -63,18 +64,19 @@ gl.pcoa.plot.builder <- function(glPca, data, scale = FALSE, ellipse = FALSE, p 
     colnames(df) <- c("PCoAx", "PCoAy", "ind", "pop")
 
     ## build the object with the embedded plotting code and data
-    out <- list(init = as_plotter(plotfun = "ggplot2::ggplot", plotargs = list(data = df, mapping = aes_string(x = "PCoAx", y = "PCoAx", group = group_by, colour = "pop"))))
+    out <- list(init = as_plotter(plotfun = "ggplot2::ggplot", plotargs = list(data = df, mapping = ggplot2::aes_string(x = "PCoAx", y = "PCoAy", group = group_by, colour = "pop"))))
     out$points <- as_plotter(plotfun = "ggplot2::geom_point", plotargs = list(size = 2))
     plot_sequence <- c("init", "points")
-    if (!labels %in% c("interactive", "ggplotly")) {
-        out$labels <- as_plotter(plotfun = "directlabels::geom_dl", plotargs = list(mapping = aes_string(label = "ind"), method = "first.points"))
+    if (labels %in% c("ind", "pop")) {
+        dlargs <- list(mapping = ggplot2::aes_string(label = labels), method = if (labels == "ind") "first.points" else "smart.grid")
+        out$labels <- as_plotter(plotfun = "directlabels::geom_dl", plotargs = dlargs)
         plot_sequence <- c(plot_sequence, "labels")
     }
-    themeargs <- list(axis.title = element_text(face = "bold.italic", size = "20", color="black"),
-                      axis.text.x  = element_text(face = "bold", angle = 0, vjust = 0.5, size = 10),
-                      axis.text.y  = element_text(face = "bold", angle = 0, vjust = 0.5, size = 10),
-                      legend.title = element_text(colour = "black", size = 18, face = "bold"),
-                      legend.text = element_text(colour = "black", size = 16, face="bold"))
+    themeargs <- list(axis.title = ggplot2::element_text(face = "bold.italic", size = "20", color="black"),
+                      axis.text.x  = ggplot2::element_text(face = "bold", angle = 0, vjust = 0.5, size = 10),
+                      axis.text.y  = ggplot2::element_text(face = "bold", angle = 0, vjust = 0.5, size = 10),
+                      legend.title = ggplot2::element_text(colour = "black", size = 18, face = "bold"),
+                      legend.text = ggplot2::element_text(colour = "black", size = 16, face="bold"))
     if (labels %in% c("pop", "interactive", "plotly")) themeargs$legend.position <- "none"
     out$theme <- as_plotter(plotfun = "ggplot2::theme",
                             plotargs = themeargs)
@@ -100,15 +102,15 @@ gl.pcoa.plot.builder <- function(glPca, data, scale = FALSE, ellipse = FALSE, p 
 
 
 as_plotter <- function(plotfun, plotargs = NULL, name = NULL) {
-    if (!is.string(plotfun)) {
-        assert_that(is.function(plotfun))
+    if (!is.character(plotfun)) {
+        stopifnot(is.function(plotfun))
     } else {
-        assert_that(!is.na(plotfun), nzchar(plotfun))
+        stopifnot(!is.na(plotfun), nzchar(plotfun))
     }
-    if (!is.null(plotargs)) assert_that(is.list(plotargs))
+    if (!is.null(plotargs)) stopifnot(is.list(plotargs))
     out <- list(structure(list(plotfun = plotfun, plotargs = plotargs), class = "ggplotter"))
     if (!is.null(name)) {
-        assert_that(is.string(name))
+        stopifnot(is.character(name), length(name) == 1)
         names(out) <- name
     }
     out

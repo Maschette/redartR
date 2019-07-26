@@ -1,0 +1,68 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+# redartR
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+`redartR` is a builder for PCoA plots from the `dartR` package. The original `dartR::gl.pcoa.plot` function builds the `ggplot` object directly, which can then be difficult to modify to suit your needs.
+
+Instead, this `gl.pcoa.plot.builder` function returns an object of class `ggbuilder`, which contains the data and code required to produce the `ggplot` object. You can modify that code and/or data inside the `ggbuilder` object.
+Printing or plotting the `ggbuilder` object then evaluates that code and produces a `ggplot` object; printing or plotting *that* object will draw the plot to the current graphics device, as per any other `ggplot` object.
+
+## Example
+```{r example}
+## load the dartR packge
+library(dartR)
+## and the functions from this repo
+source("redartR.R")
+
+## example plot
+gl <- testset.gl
+levels(pop(gl)) <- c(rep("Coast", 5), rep("Cooper", 3),rep("Coast", 5),
+                     rep("MDB", 8), rep("Coast", 7), "Em.subglobosa",
+                     "Em.victoriae")
+pcoa <- gl.pcoa(gl, nfactors = 5)
+
+## the existing `gl.pcoa.plot` function
+gl.pcoa.plot(pcoa, gl, ellipse = TRUE, p = 0.99, labels = "pop", hadjust = 1.5, vadjust = 1)
+
+
+## construct the ggbuilder object
+xb <- gl.pcoa.plot.builder(pcoa, gl, ellipse = TRUE, p = 0.99, labels = "pop", hadjust = 1.5, vadjust = 1)
+xb <- gl.pcoa.plot.builder(pcoa, gl, labels = "pop", hadjust = 1.5, vadjust = 1)
+
+class(xb)
+
+## the contents of that object
+str(xb)
+
+## plotting that object produces a ggplot object
+xp <- plot(xb)
+class(xp)
+
+## printing or plotting the xp object produces the actual plot
+xp
+
+## modify something in the ggbuilder object
+## replace the code that plots the points
+xb$points <- as_plotter(plotfun = "ggplot2::geom_point",
+                        plotargs = list(mapping = aes_string(shape = "pop", size = 2)))
+
+## and draw the modified plot
+xb
+
+```
+
+Note: this is largely just a proof of concept. Only `labels` of type `"pop"`, `"ind"`, `"interactive"`, or `"plotly"` are supported at the moment.
+
