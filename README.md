@@ -139,7 +139,7 @@ controls the points with one that has a shape aesthetic:
 
 ``` r
 xb$points <- as_plotter(plotfun = "ggplot2::geom_point",
-                        plotargs = list(mapping = aes_string(shape = "pop", size = 2)))
+                        plotargs = list(mapping = aes_string(shape = "pop"), size = 2))
 ```
 
 And now draw the modified plot:
