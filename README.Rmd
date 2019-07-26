@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 `redartR` is a builder for PCoA plots from the `dartR` package. The original `dartR::gl.pcoa.plot` function builds the `ggplot` object internally and returns it to the user, but it can then sometimes be difficult to modify it to suit your needs.
 
-This `gl.pcoa.plot.builder` function takes a slightly different appraoch, returning a object of class `ggbuilder`, which contains the data and code required to produce the `ggplot` object. You can modify that code and/or data inside the `ggbuilder` object.
+This `gl.pcoa.plot.builder` function takes a slightly different approach, returning an object of class `ggbuilder`, which contains the data and code required to produce the `ggplot` object. You can modify that code and/or data inside the `ggbuilder` object.
 Printing or plotting the `ggbuilder` object then evaluates that code and produces a `ggplot` object; printing or plotting *that* object will draw the plot to the current graphics device, as per any other `ggplot` object.
 
 ## Example
@@ -76,7 +76,9 @@ And printing or plotting the `xp` object produces the actual plot:
 xp
 ```
 
-The whole point of this approach is that the plot can be manipulated by changing the  `ggplotter` elements. We can modify the code or data in these elements *before* calling `plot(xb)` to generate the actual `ggplot`. For example, let's replace the `ggplotter` element that controls the points:
+### Modifying a plot
+
+The whole point of this approach is that the plot can be manipulated by changing the  `ggplotter` elements. We can modify the code or data in these elements *before* calling `plot(xb)` to generate the actual `ggplot`. For example, let's replace the `ggplotter` element that controls the points with one that has a shape aesthetic:
 
 ```{r}
 xb$points <- as_plotter(plotfun = "ggplot2::geom_point",
@@ -89,7 +91,9 @@ And now draw the modified plot:
 xb
 ```
 
-Note: this is largely just a proof of concept. Only `labels` of type `"pop"`, `"ind"`, `"interactive"`, or `"plotly"` are supported at the moment.
+## Notes
+
+This is largely just a proof of concept. Only `labels` of type `"pop"`, `"ind"`, `"interactive"`, or `"plotly"` are supported at the moment.
 
 This idea draws on a similar approach used in the [SOmap](https://github.com/AustralianAntarcticDivision/SOmap/) package.
 

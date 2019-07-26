@@ -13,7 +13,7 @@ internally and returns it to the user, but it can then sometimes be
 difficult to modify it to suit your needs.
 
 This `gl.pcoa.plot.builder` function takes a slightly different
-appraoch, returning a object of class `ggbuilder`, which contains the
+approach, returning an object of class `ggbuilder`, which contains the
 data and code required to produce the `ggplot` object. You can modify
 that code and/or data inside the `ggbuilder` object. Printing or
 plotting the `ggbuilder` object then evaluates that code and produces a
@@ -129,11 +129,13 @@ xp
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
+### Modifying a plot
+
 The whole point of this approach is that the plot can be manipulated by
 changing the `ggplotter` elements. We can modify the code or data in
 these elements *before* calling `plot(xb)` to generate the actual
 `ggplot`. For example, let’s replace the `ggplotter` element that
-controls the points:
+controls the points with one that has a shape aesthetic:
 
 ``` r
 xb$points <- as_plotter(plotfun = "ggplot2::geom_point",
@@ -148,9 +150,10 @@ xb
 
 ![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
-Note: this is largely just a proof of concept. Only `labels` of type
-`"pop"`, `"ind"`, `"interactive"`, or `"plotly"` are supported at the
-moment.
+## Notes
+
+This is largely just a proof of concept. Only `labels` of type `"pop"`,
+`"ind"`, `"interactive"`, or `"plotly"` are supported at the moment.
 
 This idea draws on a similar approach used in the
 [SOmap](https://github.com/AustralianAntarcticDivision/SOmap/) package.
