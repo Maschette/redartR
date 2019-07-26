@@ -51,148 +51,50 @@ gl.pcoa.plot(pcoa, gl, ellipse = TRUE, p = 0.99, labels = "pop", hadjust = 1.5, 
 
 ## construct the ggbuilder object
 xb <- gl.pcoa.plot.builder(pcoa, gl, ellipse = TRUE, p = 0.99, labels = "pop", hadjust = 1.5, vadjust = 1)
-xb <- gl.pcoa.plot.builder(pcoa, gl, labels = "pop", hadjust = 1.5, vadjust = 1)
 
 class(xb)
 #> [1] "ggbuilder"
 
 ## the contents of that object
-str(xb)
-#> List of 9
+str(xb, max.level = 2)
+#> List of 10
 #>  $ init         :List of 1
 #>   ..$ :List of 2
-#>   .. ..$ plotfun : chr "ggplot2::ggplot"
-#>   .. ..$ plotargs:List of 2
-#>   .. .. ..$ data   :'data.frame':    250 obs. of  4 variables:
-#>   .. .. .. ..$ PCoAx: num [1:250] 0.2539 0.0613 0.2653 0.4017 -0.1198 ...
-#>   .. .. .. ..$ PCoAy: num [1:250] 0.2858 -0.0249 0.3407 0.5404 0.0397 ...
-#>   .. .. .. ..$ ind  : Factor w/ 250 levels "AA000302","AA000303",..: 56 226 183 89 66 80 144 145 146 143 ...
-#>   .. .. .. ..$ pop  : Factor w/ 5 levels "Coast","Cooper",..: 3 1 3 3 1 2 1 1 1 1 ...
-#>   .. .. ..$ mapping:List of 4
-#>   .. .. .. ..$ group : language ~pop
-#>   .. .. .. .. ..- attr(*, ".Environment")=<environment: 0x55c0605b5bc0> 
-#>   .. .. .. ..$ colour: language ~pop
-#>   .. .. .. .. ..- attr(*, ".Environment")=<environment: 0x55c0605b5bc0> 
-#>   .. .. .. ..$ x     : language ~PCoAx
-#>   .. .. .. .. ..- attr(*, ".Environment")=<environment: 0x55c0605b5bc0> 
-#>   .. .. .. ..$ y     : language ~PCoAy
-#>   .. .. .. .. ..- attr(*, ".Environment")=<environment: 0x55c0605b5bc0> 
-#>   .. .. .. ..- attr(*, "class")= chr "uneval"
 #>   .. ..- attr(*, "class")= chr "ggplotter"
 #>  $ points       :List of 1
 #>   ..$ :List of 2
-#>   .. ..$ plotfun : chr "ggplot2::geom_point"
-#>   .. ..$ plotargs:List of 1
-#>   .. .. ..$ size: num 2
 #>   .. ..- attr(*, "class")= chr "ggplotter"
 #>  $ labels       :List of 1
 #>   ..$ :List of 2
-#>   .. ..$ plotfun : chr "directlabels::geom_dl"
-#>   .. ..$ plotargs:List of 2
-#>   .. .. ..$ mapping:List of 1
-#>   .. .. .. ..$ label: language ~pop
-#>   .. .. .. .. ..- attr(*, ".Environment")=<environment: 0x55c0605b5bc0> 
-#>   .. .. .. ..- attr(*, "class")= chr "uneval"
-#>   .. .. ..$ method : chr "smart.grid"
 #>   .. ..- attr(*, "class")= chr "ggplotter"
 #>  $ theme        :List of 1
 #>   ..$ :List of 2
-#>   .. ..$ plotfun : chr "ggplot2::theme"
-#>   .. ..$ plotargs:List of 6
-#>   .. .. ..$ axis.title     :List of 11
-#>   .. .. .. ..$ family       : NULL
-#>   .. .. .. ..$ face         : chr "bold.italic"
-#>   .. .. .. ..$ colour       : chr "black"
-#>   .. .. .. ..$ size         : chr "20"
-#>   .. .. .. ..$ hjust        : NULL
-#>   .. .. .. ..$ vjust        : NULL
-#>   .. .. .. ..$ angle        : NULL
-#>   .. .. .. ..$ lineheight   : NULL
-#>   .. .. .. ..$ margin       : NULL
-#>   .. .. .. ..$ debug        : NULL
-#>   .. .. .. ..$ inherit.blank: logi FALSE
-#>   .. .. .. ..- attr(*, "class")= chr [1:2] "element_text" "element"
-#>   .. .. ..$ axis.text.x    :List of 11
-#>   .. .. .. ..$ family       : NULL
-#>   .. .. .. ..$ face         : chr "bold"
-#>   .. .. .. ..$ colour       : NULL
-#>   .. .. .. ..$ size         : num 10
-#>   .. .. .. ..$ hjust        : NULL
-#>   .. .. .. ..$ vjust        : num 0.5
-#>   .. .. .. ..$ angle        : num 0
-#>   .. .. .. ..$ lineheight   : NULL
-#>   .. .. .. ..$ margin       : NULL
-#>   .. .. .. ..$ debug        : NULL
-#>   .. .. .. ..$ inherit.blank: logi FALSE
-#>   .. .. .. ..- attr(*, "class")= chr [1:2] "element_text" "element"
-#>   .. .. ..$ axis.text.y    :List of 11
-#>   .. .. .. ..$ family       : NULL
-#>   .. .. .. ..$ face         : chr "bold"
-#>   .. .. .. ..$ colour       : NULL
-#>   .. .. .. ..$ size         : num 10
-#>   .. .. .. ..$ hjust        : NULL
-#>   .. .. .. ..$ vjust        : num 0.5
-#>   .. .. .. ..$ angle        : num 0
-#>   .. .. .. ..$ lineheight   : NULL
-#>   .. .. .. ..$ margin       : NULL
-#>   .. .. .. ..$ debug        : NULL
-#>   .. .. .. ..$ inherit.blank: logi FALSE
-#>   .. .. .. ..- attr(*, "class")= chr [1:2] "element_text" "element"
-#>   .. .. ..$ legend.title   :List of 11
-#>   .. .. .. ..$ family       : NULL
-#>   .. .. .. ..$ face         : chr "bold"
-#>   .. .. .. ..$ colour       : chr "black"
-#>   .. .. .. ..$ size         : num 18
-#>   .. .. .. ..$ hjust        : NULL
-#>   .. .. .. ..$ vjust        : NULL
-#>   .. .. .. ..$ angle        : NULL
-#>   .. .. .. ..$ lineheight   : NULL
-#>   .. .. .. ..$ margin       : NULL
-#>   .. .. .. ..$ debug        : NULL
-#>   .. .. .. ..$ inherit.blank: logi FALSE
-#>   .. .. .. ..- attr(*, "class")= chr [1:2] "element_text" "element"
-#>   .. .. ..$ legend.text    :List of 11
-#>   .. .. .. ..$ family       : NULL
-#>   .. .. .. ..$ face         : chr "bold"
-#>   .. .. .. ..$ colour       : chr "black"
-#>   .. .. .. ..$ size         : num 16
-#>   .. .. .. ..$ hjust        : NULL
-#>   .. .. .. ..$ vjust        : NULL
-#>   .. .. .. ..$ angle        : NULL
-#>   .. .. .. ..$ lineheight   : NULL
-#>   .. .. .. ..$ margin       : NULL
-#>   .. .. .. ..$ debug        : NULL
-#>   .. .. .. ..$ inherit.blank: logi FALSE
-#>   .. .. .. ..- attr(*, "class")= chr [1:2] "element_text" "element"
-#>   .. .. ..$ legend.position: chr "none"
 #>   .. ..- attr(*, "class")= chr "ggplotter"
 #>  $ axis_labels  :List of 1
 #>   ..$ :List of 2
-#>   .. ..$ plotfun : chr "ggplot2::labs"
-#>   .. ..$ plotargs:List of 2
-#>   .. .. ..$ x: chr "PCoA Axis 1 (23.3%)"
-#>   .. .. ..$ y: chr "PCoA Axis 2 (19.5%)"
 #>   .. ..- attr(*, "class")= chr "ggplotter"
 #>  $ hline        :List of 1
 #>   ..$ :List of 2
-#>   .. ..$ plotfun : chr "ggplot2::geom_hline"
-#>   .. ..$ plotargs:List of 1
-#>   .. .. ..$ yintercept: num 0
 #>   .. ..- attr(*, "class")= chr "ggplotter"
 #>  $ vline        :List of 1
 #>   ..$ :List of 2
-#>   .. ..$ plotfun : chr "ggplot2::geom_vline"
-#>   .. ..$ plotargs:List of 1
-#>   .. .. ..$ xintercept: num 0
 #>   .. ..- attr(*, "class")= chr "ggplotter"
 #>  $ scale_color  :List of 1
 #>   ..$ :List of 2
-#>   .. ..$ plotfun : chr "ggplot2::scale_color_manual"
-#>   .. ..$ plotargs:List of 1
-#>   .. .. ..$ values: num [1:250] 3 1 3 3 1 2 1 1 1 1 ...
 #>   .. ..- attr(*, "class")= chr "ggplotter"
-#>  $ plot_sequence: chr [1:8] "init" "points" "labels" "theme" ...
+#>  $ ellipse      :List of 1
+#>   ..$ :List of 2
+#>   .. ..- attr(*, "class")= chr "ggplotter"
+#>  $ plot_sequence: chr [1:9] "init" "points" "labels" "theme" ...
 #>  - attr(*, "class")= chr "ggbuilder"
+
+str(xb$points)
+#> List of 1
+#>  $ :List of 2
+#>   ..$ plotfun : chr "ggplot2::geom_point"
+#>   ..$ plotargs:List of 1
+#>   .. ..$ size: num 2
+#>   ..- attr(*, "class")= chr "ggplotter"
 
 ## plotting that object produces a ggplot object
 xp <- plot(xb)

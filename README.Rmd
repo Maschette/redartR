@@ -40,12 +40,13 @@ gl.pcoa.plot(pcoa, gl, ellipse = TRUE, p = 0.99, labels = "pop", hadjust = 1.5, 
 
 ## construct the ggbuilder object
 xb <- gl.pcoa.plot.builder(pcoa, gl, ellipse = TRUE, p = 0.99, labels = "pop", hadjust = 1.5, vadjust = 1)
-xb <- gl.pcoa.plot.builder(pcoa, gl, labels = "pop", hadjust = 1.5, vadjust = 1)
 
 class(xb)
 
 ## the contents of that object
-str(xb)
+str(xb, max.level = 2)
+
+str(xb$points)
 
 ## plotting that object produces a ggplot object
 xp <- plot(xb)
