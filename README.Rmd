@@ -15,9 +15,9 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-`redartR` is a builder for PCoA plots from the `dartR` package. The original `dartR::gl.pcoa.plot` function builds the `ggplot` object directly, which can then be difficult to modify to suit your needs.
+`redartR` is a builder for PCoA plots from the `dartR` package. The original `dartR::gl.pcoa.plot` function builds the `ggplot` object internally and returns it to the user, but it can then sometimes be difficult to modify it to suit your needs.
 
-Instead, this `gl.pcoa.plot.builder` function returns an object of class `ggbuilder`, which contains the data and code required to produce the `ggplot` object. You can modify that code and/or data inside the `ggbuilder` object.
+This `gl.pcoa.plot.builder` function takes a slightly different appraoch, returning a object of class `ggbuilder`, which contains the data and code required to produce the `ggplot` object. You can modify that code and/or data inside the `ggbuilder` object.
 Printing or plotting the `ggbuilder` object then evaluates that code and produces a `ggplot` object; printing or plotting *that* object will draw the plot to the current graphics device, as per any other `ggplot` object.
 
 ## Example
@@ -33,37 +33,63 @@ levels(pop(gl)) <- c(rep("Coast", 5), rep("Cooper", 3),rep("Coast", 5),
                      rep("MDB", 8), rep("Coast", 7), "Em.subglobosa",
                      "Em.victoriae")
 pcoa <- gl.pcoa(gl, nfactors = 5)
+```
 
-## the existing `gl.pcoa.plot` function
-gl.pcoa.plot(pcoa, gl, ellipse = TRUE, p = 0.99, labels = "pop", hadjust = 1.5, vadjust = 1)
+The existing `gl.pcoa.plot` function:
 
+```{r}
+gl.pcoa.plot(pcoa, gl, ellipse = TRUE, p = 0.95, labels = "pop", hadjust = 1.5, vadjust = 1)
+```
 
-## construct the ggbuilder object
-xb <- gl.pcoa.plot.builder(pcoa, gl, ellipse = TRUE, p = 0.99, labels = "pop", hadjust = 1.5, vadjust = 1)
+Construct the ggbuilder object:
+
+```{r}
+xb <- gl.pcoa.plot.builder(pcoa, gl, ellipse = TRUE, p = 0.95, labels = "pop", hadjust = 1.5, vadjust = 1)
 
 class(xb)
+```
 
-## the contents of that object
+This object contains a bunch of elements of class `ggplotter`, along with a `plot_sequence` element:
+
+```{r}
 str(xb, max.level = 2)
+```
 
+Each element of class `ggplotter` contains the data and code required to produce one part of the plot, and the `plot_sequence` elements gives the order in which those elements should be executed.
+
+Look at one of the `ggplotter` objects:
+
+```{r}
 str(xb$points)
+```
 
-## plotting that object produces a ggplot object
+It contains a `plotfun` element (the function that will be called to plot this element) and `plotargs` (the parameters that will be passed to that function).
+
+Plotting the `xb` object produces a ggplot object:
+```{r}
 xp <- plot(xb)
 class(xp)
+```
 
-## printing or plotting the xp object produces the actual plot
+And printing or plotting the `xp` object produces the actual plot:
+```{r}
 xp
+```
 
-## modify something in the ggbuilder object
-## replace the code that plots the points
+The whole point of this approach is that the plot can be manipulated by changing the  `ggplotter` elements. We can modify the code or data in these elements *before* calling `plot(xb)` to generate the actual `ggplot`. For example, let's replace the `ggplotter` element that controls the points:
+
+```{r}
 xb$points <- as_plotter(plotfun = "ggplot2::geom_point",
                         plotargs = list(mapping = aes_string(shape = "pop", size = 2)))
+```
 
-## and draw the modified plot
+And now draw the modified plot:
+
+```{r}
 xb
-
 ```
 
 Note: this is largely just a proof of concept. Only `labels` of type `"pop"`, `"ind"`, `"interactive"`, or `"plotly"` are supported at the moment.
+
+This idea draws on a similar approach used in the [SOmap](https://github.com/AustralianAntarcticDivision/SOmap/) package.
 

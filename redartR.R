@@ -29,8 +29,8 @@ library(ggplot2)
 
 gl.pcoa.plot.builder <- function(glPca, data, scale = FALSE, ellipse = FALSE, p = 0.95, labels = "pop", hadjust = 1.5, vadjust = 1, xaxis = 1, yaxis = 2, values) {
 
-    if (!inherits(glPca, c("glPca", "genlight")))
-        stop("glPca and genlight objects required for glPca and data parameters respectively!")
+    if (!inherits(glPca, "glPca")) stop("glPca object required for glPca parameter")
+    if (!inherits(data, "genlight")) stop("genlight object required for data parameter")
 
     ## Create a dataframe to hold the required scores
     df <- data.frame(cbind(glPca$scores[, xaxis], glPca$scores[, yaxis]))
@@ -78,13 +78,11 @@ gl.pcoa.plot.builder <- function(glPca, data, scale = FALSE, ellipse = FALSE, p 
                       legend.title = ggplot2::element_text(colour = "black", size = 18, face = "bold"),
                       legend.text = ggplot2::element_text(colour = "black", size = 16, face="bold"))
     if (labels %in% c("pop", "interactive", "plotly")) themeargs$legend.position <- "none"
-    out$theme <- as_plotter(plotfun = "ggplot2::theme",
-                            plotargs = themeargs)
+    out$theme <- as_plotter(plotfun = "ggplot2::theme", plotargs = themeargs)
     out$axis_labels <- as_plotter(plotfun = "ggplot2::labs", plotargs = list(x = xlab, y = ylab))
     out$hline <- as_plotter(plotfun = "ggplot2::geom_hline", plotargs = list(yintercept = 0))
     out$vline <- as_plotter(plotfun = "ggplot2::geom_vline", plotargs = list(xintercept = 0))
-    out$scale_color <- as_plotter("ggplot2::scale_color_manual", plotargs = list(values = values))
-    plot_sequence <- c(plot_sequence, "theme", "axis_labels", "hline", "vline", "scale_color")
+    plot_sequence <- c(plot_sequence, "theme", "axis_labels", "hline", "vline")
     if (scale) {
         out$coord <- as_plotter(plotfun = "ggplot2::coord_fixed", plotargs = list(ratio = e[yaxis]/e[xaxis]))
         plot_sequence <- c(plot_sequence, "coord")
@@ -92,7 +90,11 @@ gl.pcoa.plot.builder <- function(glPca, data, scale = FALSE, ellipse = FALSE, p 
     ## Add ellipses if requested
     if (ellipse) {
         ellpsargs <- list(type = "norm", level = p)
-        if (labels == "pop") ellpsargs$colour <- "black"
+        if (labels == "pop") {
+            ellpsargs$colour <- "black"
+        } else {
+            ellpsargs$mapping <- aes_string(colour = "pop")
+        }
         out$ellipse <- as_plotter(plotfun = "ggplot2::stat_ellipse", plotargs = ellpsargs)
         plot_sequence <- c(plot_sequence, "ellipse")
     }
